@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><%= title %></title>
+</head>
+<body>
+    <form action="/api/auth/signup" method="post" id="formSign">
+        <input type="text" name="firstname" id="firstname" placeholder="firstname"/>
+        <input type="text" name="surname" id="surname" placeholder="surname"/>
+        <input type="email" name="email" id="email" placeholder="@email.com"/>
+        <input type="password" name="password" id="password" placeholder=""/>
+        <input type="number" name="age" id="age" placeholder="20"/>
+        <ul>
+            <li><input type="radio" name="gender" id="gender" value="male" checked/>Male</li>
+            <li><input type="radio" name="gender" id="gender" value="female"/>Female</li>
+        </ul>
+
+        <button type="submit" id="btnSign">SignUp</button>
+        
+    </form>
+
+
+    <script>
+        var btnSign = document.getElementById('btnSign');
+        var formSign = document.getElementById('formSign');
+        formSign.onsubmit = function(e){
+            e.preventDefault();
+            var action = formSign.action;
+            var method = formSign.method;
+            var firstname = formSign.elements.firstname.value;
+            var surname = formSign.elements.surname.value;
+            var email = formSign.elements.email.value;
+            var password = formSign.elements.password.value;
+            var age = formSign.elements.age.value;
+            var gender = formSign.elements.gender.value;
+            
+            var xhttp = new XMLHttpRequest();
+            xhttp.open(method, action);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(`firstname=${firstname}&surname=${surname}&email=${email}&password=${password}&age=${age}&gender=${gender}`);
+
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4){
+                    console.log(JSON.parse(this.responseText));
+                }
+            }
+        }
+    </script>
+</body>
+</html>

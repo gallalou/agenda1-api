@@ -20,7 +20,7 @@ router.post('/signup', function (req, res, next) {
 
     if (isValid) {
 
-        emailIsExist(email, function (err, exist) { 
+        emailIsExist(email, function (err, exist) {
 
             if (err || exist) {
                 errors.email = 'Email is invalid';
@@ -108,7 +108,7 @@ router.post('/login', function (req, res, next) {
 
         if (err || !exist) {
 
-            // Email not exist 
+            // Email not exist
             return res.status(401).json({ success: false, errors: { form: 'Invalid Credentials' } });
 
 

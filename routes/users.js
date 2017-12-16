@@ -1,21 +1,16 @@
 var express = require('express');
 var router = express.Router();
-var db = require('../db');
-var ObjectId = require('mongodb').ObjectId;
+var User = require('../models/user.model');
+
 
 /* GET users listing. */
-router.get('/all', function(req, res, next) {
-  var collection = db.get().collection('users');
+router.get('/', function(req, res, next) {
 
-  collection.find().toArray(function(err, users){
-    if(err){
-      console.log(err.message);
-      res.json({
-        "error": err.message
-      });  
-    }
-    res.json(users);
-  })
+  User.find({},function (err, users) {
+    if(err) return next(err);
+    return res.json(users);
+  });
+
 });
 
 
@@ -24,19 +19,18 @@ router.get('/all', function(req, res, next) {
 
 router.get('/:id', function(req, res, next){
 
-  var id = req.params.id;
-  var collection = db.get().collection('users');
+  const id = req.params.id;
 
-  collection.find({_id: ObjectId(id)}).toArray(function(err, user){
+  User.findOne({_id: id}, function(err, user){
     if(err){
       console.log(err.message);
       res.json({
         "error": err.message
-      });  
+      });
     }
-    
-    res.json(user[0]);
-    
+
+    res.json(user);
+
   });
 
 });

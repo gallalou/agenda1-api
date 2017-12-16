@@ -5,8 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var assert = require('assert');
-var db = require('./db');
-
+var mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 var index = require('./routes/index');
 var auth = require('./routes/auth');
 var users = require('./routes/users');
@@ -39,7 +39,7 @@ app.use(function (req, res, next) {
   // Connection URL
   var url = 'mongodb://localhost:27017/calendly';
 
-  db.connect(url, function(err, database){
+  mongoose.connect(url,{useMongoClient : true}, function(err, database){
     assert.equal(null, err);
     console.log('Connected successfully to server mongodb');
     next();
@@ -69,11 +69,14 @@ app.use(function (err, req, res, next) {
   //res.locals.message = err.message;
   //res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+  console.log(err);
+
   // render the error page
   res.status(err.status || 500);
   //res.render('error');
   res.json({
-    'error': err.message
+    errors : err,
+    'message': err.message
   });
 });
 

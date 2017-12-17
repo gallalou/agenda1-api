@@ -29,9 +29,12 @@ router.post('/signup', function(req, res, next) {
     gender: gender
   });
 
-  user.save(function(err, user){
-    if(err) return next(err);
-    return res.status(200).json({success : true, user : user});
+  user.save(function(err, user) {
+    if (err) return next(err);
+    return res.status(200).json({
+      success: true,
+      user: user
+    });
   });
 });
 
@@ -42,9 +45,32 @@ router.post('/login', function(req, res, next) {
     email,
     password
   } = req.body;
-  User.findOne({email, password : md5(password)}, function(err, user){
-    if(err || !user) return res.status(400).json({success : false, message: 'invalid credentials'});
-    return res.status(200).json({success : true, message: 'Success Auth'}); 
+  User.findOne({
+    email,
+    password: md5(password)
+  }, function(err, user) {
+    if (err || !user) return res.status(401).json({
+      success: false,
+      errors: {
+        form: 'Invalid Credentials'
+      }
+    });
+    console.log('privateKey: ',privateKey);
+    return res.status(200).json({
+      success: true,
+      message: 'Success Auth',
+      errors: {},
+      token: jwt.sign({
+          firstname: user.firstname,
+          surname: user.surname,
+          email: user.email,
+          age: user.age,
+          gender: user.gender,
+          registeredAt: user.registeredAt,
+        },
+        privateKey
+      ),
+    });
   })
 });
 
